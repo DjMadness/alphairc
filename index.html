@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>AlphaChat Webchat</title>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script>
+	var socket = io.connect('http://host:port'); // Node.js server is here
+	socket.on('connect', function() {
+		socket.emit('IRC_CONNECT', 'hostname', 'port', 'nick', "Ident", "realname");
+		
+	});
+	socket.on('REPLY', function (server, port) {
+		output_text.innerHTML = '';
+		$('#output_text').append('<div>Connecting to: ' + server + ':' + port + '</div><br />');
+	});
+</script>
+</head>
+<body>
+<div>
+<div class="chatform" id="output_text" style="float:left;height:880px;width: 89%;overflow-y: scroll;">
+Please wait while connecting
+</div>
+<div class="chatform" id="nicklist" style="float:left;height:880px;width: 10%;overflow-y: scroll;margin-left:5px;margin-right:5px;right:-10px;position:relative;">
+  <div>nick1</div>
+
+</div>
+<br />
+</div>
+<input type="text" name="input_text" class="chatform" id="input_text" style="width: 100%;" onkeypress="if (event.keyCode == 13) senddata();"/><br />
+<div style="width:100%;">
+<div style="position:relative;left:-5px;float:left;border:1px solid;margin-top:2px;margin-bottom:2px;margin-left:5px;margin-right:5px;padding-left:2px;padding-right:2px;">Alphachat</div>
+<div style="position:relative;left:-5px;float:left;border:1px solid;margin-top:2px;margin-bottom:2px;margin-left:5px;margin-right:5px;padding-left:2px;padding-right:2px;background-color:#b0c4de;">#TestChannel</div>
+</div>
+</body>
+</html>
