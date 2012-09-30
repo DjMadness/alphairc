@@ -5,15 +5,28 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script>
-	var socket = io.connect('http://host:port'); // Node.js server is here
+	var socket = io.connect('http://bnc.totalirc.net:6969'); // Node.js server is here
 	socket.on('connect', function() {
-		socket.emit('IRC_CONNECT', 'hostname', 'port', 'nick', "Ident", "realname");
+		socket.emit('IRC_CONNECT', 'server', '6667', 'DjTester', "Ident", "Real Name");
 		
 	});
 	socket.on('REPLY', function (server, port) {
 		output_text.innerHTML = '';
-		$('#output_text').append('<div>Connecting to: ' + server + ':' + port + '</div><br />');
+		$('#output_text').append('<div style="width:100%;">Connecting to: ' + server + ':' + port + '</div>');
 	});
+	socket.on('IRC_CONNECTED', function (message) {
+		$('#output_text').append('<div style="width:100%;">Connected</div>');
+	});
+	socket.on('IRC_DISCON', function (message) {
+		$('#output_text').append('<div style="width:100%;">Disconnected from server </div>');
+	});
+	//IRC_NICK_IN_USE
+	socket.on('IRC_NICK_IN_USE', function (message) {
+		input_text.value = '/NICK ';
+	});
+	/*socket.on('IRC_DEBUG', function (message) {
+		$('#output_text').append('<div style="width:100%;">' + message + '</div>');
+	});*/
 </script>
 </head>
 <body>
