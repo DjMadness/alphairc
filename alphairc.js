@@ -22,11 +22,12 @@ var usernames = {};
 
 io.sockets.on('connection', function (socket) {
 	socket.on('IRC_CONNECT', function (server, port, nick, username, realname) {
+		var servername = null;
 		io.sockets.emit('REPLY', server, port);
 		socket.net = require('net');
 		socket.irc = {};
 		socket.irc.socket = new socket.net.Socket();
-		socket.irc.socket.setEncoding('ascii');
+		//socket.irc.socket.setEncoding('ascii');
 		socket.irc.socket.connect(port, server);
 		socket.irc.socket.on('connect', function(sock) {
 			socket.irc.socket.write('WEBIRC ' + webirc_pass + ' cgiirc ' + host + ' ' + ip + ' \n');
@@ -35,26 +36,27 @@ io.sockets.on('connection', function (socket) {
 			console.log("Connected!\n");
 			io.sockets.emit('IRC_CONNECTED', "connected");
 		});
-		socket.irc.socket.on('/PING \:(.*)/', function(info)
-				{
-			console.log("PONG");
-			socket.irc.socket.write('PONG :' + info[1]);
-				});
-		/*socket.irc.socket.on('data', function(data) {
+		//:Gangnam.NJ.US.AlphaChat.net 376 DjTester :End of /MOTD command.
+		socket.irc.socket.on('data', function(data) {
+			
+			var data = data.toString();
+			console.log('[RECV] ' + data + '');
 			var parts = data.split(' ');
 			if(parts[0] == "PING") { 
-				console.log("PONG");
 				socket.irc.socket.write('PONG :' + parts[1] + ' \n');
 			}
-
-				
+			if(parts[1] == "NOTICE") {
+				var fullmsg = data.split(' ', 3);
+				io.sockets.emit('IRC_NOTICE', parts[0], fullmsg[2]);
+			}
 			
-		});*/
-		socket.irc.socket.on('data', function(data) {
-			console.log(data);
 		});
 		socket.irc.socket.on('end', function(sock) {
 			io.sockets.emit('IRC_DISCON', sock);
+		});
+		socket.on('IRC_SEND', function(command){
+			console.log(command);
+			socket.irc.socket.write('' + command + '\n');
 		});
 
 		// END

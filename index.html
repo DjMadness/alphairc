@@ -5,9 +5,9 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script>
-	var socket = io.connect('http://bnc.totalirc.net:6969'); // Node.js server is here
+	var socket = io.connect('http://host:6969'); // Node.js server is here
 	socket.on('connect', function() {
-		socket.emit('IRC_CONNECT', 'server', '6667', 'DjTester', "Ident", "Real Name");
+		socket.emit('IRC_CONNECT', 'host', '6667', 'DjTester', "Ident", "Real Name");
 		
 	});
 	socket.on('REPLY', function (server, port) {
@@ -24,9 +24,18 @@
 	socket.on('IRC_NICK_IN_USE', function (message) {
 		input_text.value = '/NICK ';
 	});
-	/*socket.on('IRC_DEBUG', function (message) {
-		$('#output_text').append('<div style="width:100%;">' + message + '</div>');
-	});*/
+	//IRC_NOTICE nick, message
+	socket.on('IRC_NOTICE', function (nick, message) {
+		$('#output_text').append('<div style="width:100%;">NOTICE FROM ' + nick + ': ' + message + '</div>');
+	});
+	
+	
+	function senddata() {
+		var input_text = document.getElementById("input_text");
+		var input_texter = input_text.value
+		socket.emit('IRC_SEND', input_text.value);
+		input_text.value = null;
+	}
 </script>
 </head>
 <body>
