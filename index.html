@@ -5,9 +5,9 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script>
-	var socket = io.connect('http://hostname:6969'); // Node.js server is here
+	var socket = io.connect('http://host:6969'); // Node.js server is here
 	socket.on('connect', function() {
-		socket.emit('IRC_CONNECT', 'hostname', '6667', 'DjTester', "Ident", "Real Name");
+		socket.emit('IRC_CONNECT', 'host', '6667', 'DjTester', "Ident", "Real Name");
 		
 	});
 	socket.on('REPLY', function (server, port) {

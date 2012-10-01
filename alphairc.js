@@ -74,12 +74,11 @@ io.sockets.on('connection', function (socket) {
 					socket.emit('IRC_PRIVMSG', socket.parts[0], socket.message);
 				}
 				if(socket.parts[1] == "005") {
-					console.log("005 is found");
 					socket.message = socket.parts.slice(3);
 					socket.message = socket.message.toString();
 					socket.message = socket.message.replace(":", "");
 					socket.nickset = true;
-					//io.sockets.emit('IRC_PRIVMSG', parts[0], message);
+					socket.emit('IRC_STATUS_RAW', socket.parts[0], socket.message);
 				}
 				
 				
@@ -97,7 +96,7 @@ io.sockets.on('connection', function (socket) {
 			io.sockets.emit('IRC_DISCON', sock);
 		});
 		socket.on('IRC_SEND', function(command){
-			console.log(command);
+			
 			socket.irc.socket.write('' + command + '\n');
 		});
 		socket.on('end', function(){
